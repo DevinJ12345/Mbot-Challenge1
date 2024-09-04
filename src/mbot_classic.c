@@ -56,7 +56,8 @@ bool mbot_loop(repeating_timer_t *rt)
         if(drive_mode == MODE_MOTOR_VEL_OL){
             mbot_motor_pwm.utime = global_utime;
             //TO DO: add motor velocity command 
-            
+
+
         }else if(drive_mode == MODE_MBOT_VEL){
             //TO DO: open loop for now - implement closed loop controller
             
@@ -225,8 +226,27 @@ int mbot_calculate_diff_body_vel_imu(float wheel_left_vel, float wheel_right_vel
 // Use slope + intercept from calibration to generate a PWM command.
 static float _calibrated_pwm_from_vel_cmd(float vel_cmd, int motor_idx){
     // TO DO: Implement open loop here using your calibration parameters
+    float duty = 0;
 
-    return 0.0;
+    if(vel_cmd < 0){
+        if motor_idx == MOT_R{
+         duty = (vel_cmd -1.11) / 17.2;
+    }
+    else if (motor_idx == MOT_L){
+        duty = (vel_cmd - 0.897) / 15.3; 
+        } 
+    }
+    
+    else if(vel_cmd > 0){
+        if motor_idx == MOT_R{
+         duty = (vel_cmd + 0.843) / 15.5;
+    }
+    else if (motor_idx == MOT_L){
+        duty = (vel_cmd + 1.14) / 16.7; 
+        } 
+    }
+
+    return duty;
 }
 
 void print_mbot_params(const mbot_params_t* params) {
